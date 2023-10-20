@@ -1,0 +1,135 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier d'achats</title>
+    <style>
+        /* Style CSS pour la mise en forme */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .product {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .product-name {
+            flex: 2;
+        }
+        .product-quantity {
+            flex: 1;
+        }
+        .product-price {
+            flex: 1;
+        }
+        .product-actions {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .heart {
+            color: gray;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Panier d'achats</h1>
+        <div class="product">
+            <div class="product-name">Article 1</div>
+            <div class="product-quantity">
+                <button onclick="decreaseQuantity(1)">-</button>
+                <span id="quantity1">1</span>
+                <button onclick="increaseQuantity(1)">+</button>
+            </div>
+            <div class="product-price">$10.00</div>
+            <div class="product-actions">
+                <span class="heart" onclick="toggleFavorite(1)">❤️</span>
+                <button onclick="removeProduct(1)">Supprimer</button>
+            </div>
+        </div>
+        <div class="product">
+            <div class="product-name">Article 2</div>
+            <div class="product-quantity">
+                <button onclick="decreaseQuantity(2)">-</button>
+                <span id="quantity2">1</span>
+                <button onclick="increaseQuantity(2)">+</button>
+            </div>
+            <div class="product-price">$15.00</div>
+            <div class="product-actions">
+                <span class="heart" onclick="toggleFavorite(2)">❤️</span>
+                <button onclick="removeProduct(2)">Supprimer</button>
+            </div>
+        </div>
+        <div class="total">
+            <h2>Total : <span id="totalPrice">$25.00</span></h2>
+        </div>
+    </div>
+
+    <script>
+        // Variables pour stocker les quantités et les favoris
+        let quantities = {1: 1, 2: 1};
+        let favorites = {1: false, 2: false};
+        
+        // Fonction pour augmenter la quantité
+        function increaseQuantity(productId) {
+            quantities[productId]++;
+            updateQuantityDisplay(productId);
+            updateTotalPrice();
+        }
+        
+        // Fonction pour diminuer la quantité
+        function decreaseQuantity(productId) {
+            if (quantities[productId] > 1) {
+                quantities[productId]--;
+                updateQuantityDisplay(productId);
+                updateTotalPrice();
+            }
+        }
+        
+        // Fonction pour mettre à jour l'affichage de la quantité
+        function updateQuantityDisplay(productId) {
+            document.getElementById('quantity' + productId).innerText = quantities[productId];
+        }
+        
+        // Fonction pour supprimer un produit
+        function removeProduct(productId) {
+            const productElement = document.querySelector('.product[data-product="' + productId + '"]');
+            productElement.remove();
+            updateTotalPrice();
+        }
+        
+        // Fonction pour basculer l'état "favori" d'un produit
+        function toggleFavorite(productId) {
+            favorites[productId] = !favorites[productId];
+            const heartElement = document.querySelector('.heart[data-product="' + productId + '"]');
+            if (favorites[productId]) {
+                heartElement.style.color = 'red';
+            } else {
+                heartElement.style.color = 'gray';
+            }
+        }
+        
+        // Fonction pour mettre à jour le prix total
+        function updateTotalPrice() {
+            let totalPrice = 0;
+            for (const productId in quantities) {
+                const quantity = quantities[productId];
+                const price = productId === '1' ? 10 : 15; // Remplacez par les prix réels
+                totalPrice += quantity * price;
+            }
+            document.getElementById('totalPrice').innerText = '$' + totalPrice.toFixed(2);
+        }
+    </script>
+</body>
+</html>
